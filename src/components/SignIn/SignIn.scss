@@ -1,0 +1,30 @@
+.Authorization {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-content: center;
+  height: 100%;
+  width: 600px;
+  margin: 20vh auto 0;
+  padding: 50px 80px;
+  border: 1px solid #e2e6e9;
+
+  &__loader-container {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    background-color: rgba(128, 128, 128, 0.404);
+  }
+}
+
+.authorization-error-message {
+  color: #ff4d4f;
+  text-align: center;
+}
