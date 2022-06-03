@@ -3,6 +3,13 @@ const bodyParser = require('body-parser');
 
 const { handleSignUp, handleSignIn } = require('./server/user');
 
+const {
+  getItems,
+  addItem,
+  updateItem,
+  deleteItem,
+} = require('./server/dasboard');
+
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -13,10 +20,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/api/passwords', async (req, res) => {
-  // res.send( await getNotes());
-});
-
+// user API
 app.post('/api/sign-up', bodyParser.json(), async (req, res) => {
   const newUserData = req.body;
 
@@ -31,6 +35,59 @@ app.post('/api/sign-in', bodyParser.json(), async (req, res) => {
   const signedUserData = handleSignIn(user);
 
   res.send(signedUserData);
+});
+
+// dasboard API
+app.get('/api/dasboard/:userId', async (req, res) => {
+  const items = getItems(req.params.userId);
+
+  res.send(items);
+});
+
+app.post('/api/dasboard/:userId', bodyParser.json(), async (req, res) => {
+  const newItem = req.body;
+
+  addItem(req.params.userId, newItem);
+
+  const items = getItems(req.params.userId);
+
+  res.send(items[items.length - 1]);
+});
+
+app.patch(
+  '/api/dasboard/update/:userId&&:itemId',
+  bodyParser.json(),
+  async (req, res) => {
+    const itemData = req.body;
+
+    const result = updateItem(req.params.userId, req.params.itemId, itemData);
+
+    // if (result) {
+    //   const items = getItems(req.params.userId);
+
+    //   const updatedItem = items.find(item => item.id === req.params.itemId);
+
+    //   res.send(updatedItem);
+    // } else {
+    //   res.send(null);
+    // }
+
+    if (result) {
+      res.send({ status: 'success' });
+    } else {
+      res.send({ status: 'error' });
+    }
+  }
+);
+
+app.delete('/api/dasboard/:userId&&:itemId', async (req, res) => {
+  const result = deleteItem(req.params.userId, req.params.itemId);
+
+  if (result) {
+    res.send({ status: 'success' });
+  } else {
+    res.send({ status: 'error' });
+  }
 });
 
 app.listen(port, () => {

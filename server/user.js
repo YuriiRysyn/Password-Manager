@@ -44,6 +44,7 @@ const handleSignIn = userData => {
 };
 
 module.exports = {
+  users,
   handleSignUp,
   handleSignIn,
 };
