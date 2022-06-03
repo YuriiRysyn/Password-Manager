@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Routes, Route, Navigate, Switch } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { getUserFromLS } from '../redux/actions';
 
 import './App.scss';
 import { Dashboard } from './Dashboard/Dashboard';
@@ -8,33 +10,41 @@ import { SignIn } from './SignIn/SignIn';
 import { SignUp } from './SignUp/SignUp';
 
 function App() {
-  const [isAuth, setIsAuth] = useState(false);
-  const [userData, setUserData] = useState(null);
+  const user = useSelector(state => state.user);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getUserFromLS());
+  }, []);
 
   return (
     <div className="App">
-      <Header isAuth={isAuth} setIsAuth={setIsAuth} userData={userData} />
+      <Header />
 
       <Routes>
         <Route
           path="/"
           exact
-          element={isAuth ? <Dashboard /> : <Navigate to="/sign-in" replace />}
+          element={
+            user.isAuth ? <Dashboard /> : <Navigate to="/sign-in" replace />
+          }
         ></Route>
         <Route
           path="/sign-in"
-          element={!isAuth ? <SignIn /> : <Navigate to="/" replace />}
+          element={!user.isAuth ? <SignIn /> : <Navigate to="/" replace />}
           exact
         ></Route>
         <Route
           path="/sign-up"
           exact
-          element={!isAuth ? <SignUp /> : <Navigate to="/" replace />}
+          element={!user.isAuth ? <SignUp /> : <Navigate to="/" replace />}
         ></Route>
         <Route
           path="/dashboard"
           exact
-          element={isAuth ? <Dashboard /> : <Navigate to="/sign-in" replace />}
+          element={
+            user.isAuth ? <Dashboard /> : <Navigate to="/sign-in" replace />
+          }
         ></Route>
         <Route path="*" element={<Navigate to="/" replace />}></Route>
       </Routes>

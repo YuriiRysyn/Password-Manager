@@ -1,32 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Form, Input, Button, Checkbox } from 'antd';
-
 import 'antd/dist/antd.css';
 
+import { REQUEST } from '../../redux/constants';
+import { signIn } from '../../redux/actions';
+
 import './SignIn.scss';
+
 import { Loader } from '../Loader/Loader';
 
 export const SignIn = () => {
   const [form] = Form.useForm();
+  const user = useSelector(state => state.user);
+  const dispatch = useDispatch();
 
-  const [isFailedSignIn, setIsFailedSignIn] = useState(false);
-  const [errorInfo, setErrorInfo] = useState('Failed to sign in');
-  const [isPending, setIsPending] = useState(false);
+  const requestStatus = user && user.signInRequestStatus;
+  const isPending = requestStatus === REQUEST.PENDING;
+  const errorInfo = 'Failed to sign in. Please, try again later.';
 
-  const onSignIn = values => {
-    const { username, password, remember } = values;
+  const onSignIn = userFormData => {
+    dispatch(signIn(userFormData));
 
-    console.log('Success:', values);
     form.resetFields();
-    form.getFieldError();
-    setIsFailedSignIn(true);
-
-    
-  };
-
-  const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo);
   };
 
   return (
@@ -50,12 +47,11 @@ export const SignIn = () => {
           remember: true,
         }}
         onFinish={onSignIn}
-        onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
         <Form.Item
           label="Username"
-          name="username"
+          name="userName"
           rules={[
             {
               required: true,
@@ -102,8 +98,8 @@ export const SignIn = () => {
         </Form.Item>
       </Form>
 
-      {isFailedSignIn && (
-        <p className="authorization-error-message">{errorInfo}</p>
+      {requestStatus === REQUEST.ERROR && (
+        <p className="authorization-error-message">{user.error || errorInfo}</p>
       )}
     </section>
   );

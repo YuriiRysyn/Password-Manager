@@ -1,4 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { REQUEST } from '../../redux/constants';
+import { signUp } from '../../redux/actions';
 
 import { Form, Input, Button, Checkbox } from 'antd';
 import 'antd/dist/antd.css';
@@ -7,39 +11,40 @@ import { Loader } from '../Loader/Loader';
 
 export const SignUp = () => {
   const [form] = Form.useForm();
+  const user = useSelector(state => state.user);
+  const dispatch = useDispatch();
+  const requestStatus = user && user.signUpRequestStatus;
+
+  const isPending = requestStatus === REQUEST.PENDING;
 
   const [isFailedSignIn, setIsFailedSignIn] = useState(false);
-  const [errorInfo, setErrorInfo] = useState('Failed to sign in');
-  const [isPending, setIsPending] = useState(false);
+  const [errorInfo, setErrorInfo] = useState(
+    'Failed to sign up. Please, try again later.'
+  );
 
-  const onSignUp = values => {
-    const { username, password, confirmedPassword, remember } = values;
-
-    if (password !== confirmedPassword) {
-      setErrorInfo('Incorrect confirming password');
-      setIsFailedSignIn(true);
-
+  const onSignUp = userFormData => {
+    if (!validatePass(userFormData)) {
       return;
     }
 
     setIsFailedSignIn(false);
 
-    console.log('Success:', values);
+    dispatch(signUp(userFormData));
+
     form.resetFields();
-    form.getFieldError();
-    setIsFailedSignIn(true);
-    // setErrorInfo();
-    // call API
-    //   LogIn({
-    //     userName: values.username,
-    //     password: values.password,
-    //     remember: values.remember,
-    //   })
-    //
   };
 
-  const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo);
+  const validatePass = userFormData => {
+    const { password, confirmedPassword } = userFormData;
+
+    if (password !== confirmedPassword) {
+      setErrorInfo('Incorrect confirming password');
+      setIsFailedSignIn(true);
+
+      return false;
+    }
+
+    return true;
   };
 
   return (
@@ -62,12 +67,11 @@ export const SignUp = () => {
           remember: true,
         }}
         onFinish={onSignUp}
-        // onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
         <Form.Item
           label="Username"
-          name="username"
+          name="userName"
           rules={[
             {
               required: true,
@@ -127,7 +131,7 @@ export const SignUp = () => {
         </Form.Item>
       </Form>
 
-      {isFailedSignIn && (
+      {(isFailedSignIn || requestStatus === REQUEST.ERROR) && (
         <p className="authorization-error-message">{errorInfo}</p>
       )}
     </section>
