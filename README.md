@@ -8,6 +8,7 @@ Front-end:
 - LocalStorage
 - WebPack
 - HTML/CSS(Flex, BEM, SCSS)
+
  Back-end:
 - NodeJs/Express
 - Heroku service

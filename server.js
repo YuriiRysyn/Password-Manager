@@ -91,6 +91,8 @@ app.delete('/api/dasboard/:userId&&:itemId', async (req, res) => {
   }
 });
 
+app.use(express.static('build'));
+
 app.listen(port, () => {
   console.log(`Password manager app listening at http://localhost:${port}`);
 });
