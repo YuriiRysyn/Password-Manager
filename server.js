@@ -44,41 +44,42 @@ app.get('/api/dasboard/:userId', async (req, res) => {
   res.send(items);
 });
 
-app.post('/api/dasboard/:userId', bodyParser.json(), async (req, res) => {
-  const newItem = req.body;
-
-  addItem(req.params.userId, newItem);
-
-  const items = getItems(req.params.userId);
-
-  res.send(items[items.length - 1]);
-});
-
 app.patch(
-  '/api/dasboard/update/:userId&&:itemId',
+  '/api/dasboard/:userId&&:itemId',
   bodyParser.json(),
   async (req, res) => {
     const itemData = req.body;
 
+    console.log('PATCH', itemData);
     const result = updateItem(req.params.userId, req.params.itemId, itemData);
 
-    // if (result) {
-    //   const items = getItems(req.params.userId);
-
-    //   const updatedItem = items.find(item => item.id === req.params.itemId);
-
-    //   res.send(updatedItem);
-    // } else {
-    //   res.send(null);
-    // }
-
     if (result) {
-      res.send({ status: 'success' });
+      const items = getItems(req.params.userId);
+
+      const updatedItem = items.find(item => item.id === req.params.itemId);
+
+      res.send(updatedItem);
     } else {
-      res.send({ status: 'error' });
+      res.send(null);
     }
+
   }
 );
+
+app.post('/api/dasboard/:userId', bodyParser.json(), async (req, res) => {
+  const newItem = req.body;
+
+  const result = addItem(req.params.userId, newItem);
+  console.log(result);
+
+  if (result) {
+    const items = getItems(req.params.userId);
+
+    res.send(items[items.length - 1]);
+  } else {
+    res.send(null);
+  }
+});
 
 app.delete('/api/dasboard/:userId&&:itemId', async (req, res) => {
   const result = deleteItem(req.params.userId, req.params.itemId);

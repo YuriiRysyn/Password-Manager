@@ -1,0 +1,29 @@
+.Dashboard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 0 auto;
+
+  &__btn {
+    min-width: max-content;
+    padding: 5px 10px;
+    height: 100%;
+    color: #fff;
+    border-color: #1890ff;
+    background: #1890ff;
+    transition: all 0.3s;
+
+    &:hover {
+      border-color: #40a9ff;
+      background: #40a9ff;
+    }
+
+    &-container {
+      display: flex;
+      justify-content: end;
+      width: 100%;
+      padding: 0 20px;
+    }
+  }
+}

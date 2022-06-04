@@ -1,6 +1,16 @@
 import { combineReducers } from 'redux';
 
-import { SIGN_IN, SIGN_UP, LOGOUT } from './constants';
+import {
+  SIGN_IN,
+  SIGN_UP,
+  LOGOUT,
+  ADD_ITEM,
+  GET_ITEMS,
+  ADD_ITEM_PENDING,
+  ADD_ITEM_ERROR,
+  DELETE_ITEM,
+  UPDATE_ITEM,
+} from './constants';
 
 const userReducer = (state = {}, action) => {
   switch (action.type) {
@@ -28,6 +38,53 @@ const userReducer = (state = {}, action) => {
   }
 };
 
+const dashboardReducer = (state = { items: [] }, action) => {
+  switch (action.type) {
+    case GET_ITEMS:
+      return {
+        ...state,
+        items: action.items,
+        requestStatus: action.requestStatus,
+      };
+    case ADD_ITEM_ERROR:
+      return {
+        ...state,
+        requestStatus: action.requestStatus,
+      };
+    case ADD_ITEM_PENDING:
+      return {
+        ...state,
+        requestStatus: action.requestStatus,
+      };
+    case ADD_ITEM:
+      return {
+        ...state,
+        items: [...state.items, action.newItem],
+        requestStatus: action.requestStatus,
+      };
+    case UPDATE_ITEM:
+      return {
+        ...state,
+        items: [...state.items].map(item => {
+          if (item.id === action.itemId) {
+            return action.updatedItem;
+          }
+
+          return item;
+        }),
+      };
+    case DELETE_ITEM:
+      return {
+        ...state,
+        items: [...state.items].filter(item => item.id !== action.itemId),
+      };
+
+    default:
+      return state;
+  }
+};
+
 export const reducer = combineReducers({
   user: userReducer,
+  dasboardItems: dashboardReducer,
 });

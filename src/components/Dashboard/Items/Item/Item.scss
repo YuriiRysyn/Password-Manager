@@ -1,0 +1,48 @@
+.Item {
+  position: relative;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  min-width: 500px;
+  margin: 10px 0;
+  padding: 5px 10px;
+  border: 1px solid gray;
+
+  &__title {
+    margin: 0 10px;
+  }
+
+  &__password {
+    margin: 0 10px;
+    align-items: center;
+
+    cursor: pointer;
+  }
+
+  &__delete-btn {
+    display: none;
+    position: absolute;
+    top: -18px;
+    right: -10px;
+    bottom: 0;
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    font-size: 30px;
+    color: #cc9a9a;
+    margin-bottom: 11px;
+    transition: color 0.2s ease-out;
+
+    &:hover {
+      color: #af5b5e;
+    }
+
+    &:after {
+      content: '×';
+    }
+  }
+
+  &:hover .Item__delete-btn {
+    display: block;
+  }
+}
