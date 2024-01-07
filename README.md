@@ -5,6 +5,7 @@
 Front-end:
 - React/React Hooks/React Router
 - Redux/Redux Thunk/Redux Hooks
+- TypeScript
 - LocalStorage
 - WebPack
 - HTML/CSS(Flex, BEM, SCSS)
