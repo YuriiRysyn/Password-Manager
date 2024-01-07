@@ -1,4 +1,10 @@
-export const getItemsFromServer = async userId => {
+import { DeleteItemStatusesEnum } from '../redux/constants';
+import { IExtendedItem, IItem } from '../types/dashboardItemsTypes';
+import { IUser } from '../types/userDataTypes';
+
+export const getItemsFromServer = async (
+  userId: IUser['id']
+): Promise<IExtendedItem[] | null> => {
   const url = process.env.REACT_APP_API_URL + `/dasboard/${userId}`;
 
   try {
@@ -16,7 +22,10 @@ export const getItemsFromServer = async userId => {
   }
 };
 
-export const addItemOnServer = async (userId, itemData) => {
+export const addItemOnServer = async (
+  userId: IUser['id'],
+  itemData: IItem
+): Promise<IExtendedItem | null> => {
   const url = process.env.REACT_APP_API_URL + `/dasboard/${userId}`;
 
   try {
@@ -38,9 +47,13 @@ export const addItemOnServer = async (userId, itemData) => {
   }
 };
 
-export const updateItemOnServer = async (userId, itemId, itemData) => {
+export const updateItemOnServer = async (
+  userId: IUser['id'],
+  itemId: IExtendedItem['id'],
+  itemData: IExtendedItem
+): Promise<IExtendedItem | null> => {
   const url = process.env.REACT_APP_API_URL + `/dasboard/${userId}&&${itemId}`;
-  
+
   try {
     const responce = await fetch(url, {
       method: 'PATCH',
@@ -60,7 +73,10 @@ export const updateItemOnServer = async (userId, itemId, itemData) => {
   }
 };
 
-export const deleteItemOnserver = async (userId, itemId) => {
+export const deleteItemOnserver = async (
+  userId: IUser['id'],
+  itemId: IExtendedItem['id']
+): Promise<{ status: DeleteItemStatusesEnum } | null> => {
   const url = process.env.REACT_APP_API_URL + `/dasboard/${userId}&&${itemId}`;
 
   try {

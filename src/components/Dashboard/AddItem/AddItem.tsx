@@ -1,29 +1,41 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { REQUEST } from '../../../redux/constants';
+import React, { useState } from 'react';
+// import { useDispatch, useSelector } from 'react-redux';
+import { RequestStatusEnum } from '../../../redux/constants';
 import { addItem } from '../../../redux/dashboardActions';
 import { Loader } from '../../Loader/Loader';
 
 import './AddItem.scss';
+import { useAppDispatch, useAppSelector } from '../../..';
+import { IDashboardItems } from '../../../types/dashboardItemsTypes';
 
 export const AddItem = () => {
-  const user = useSelector(state => state.user);
-  // const items = useSelector(state => state.dasboardItems.items);
+  // const user = useSelector(state => state.user);
+  // const dispatch = useDispatch();
 
-  const dispatch = useDispatch();
+  const user = useAppSelector(state => state.user);
+  const dispatch = useAppDispatch();
 
-  const [title, setTitile] = useState('');
+  // const requestStatus = useSelector(state => state.dashboardItems.requestStatus);
+  const requestStatus: IDashboardItems['requestStatus'] = useAppSelector(
+    state => state.dashboardItems.requestStatus
+  );
+
+  const [title, setTitle] = useState('');
   const [password, setPassword] = useState('');
-  const requestStatus = useSelector(state => state.dasboardItems.requestStatus);
-  const isPending = requestStatus === REQUEST.PENDING;
+
+  const isPending =
+    requestStatus === RequestStatusEnum.PENDING ||
+    requestStatus === RequestStatusEnum.NOT_STARTED;
 
   const onAdd = () => {
     const newItemData = {
       title,
       password,
     };
+
     dispatch(addItem(user.id, newItemData));
-    setTitile('');
+
+    setTitle('');
     setPassword('');
   };
 
@@ -34,7 +46,7 @@ export const AddItem = () => {
           <Loader />
         </div>
       )}
-      <h2 className="AddIteь__title">AddItem</h2>
+      <h2 className="AddItem__title">AddItem</h2>
       <form className="AddItem__form" onSubmit={onAdd} id="addItem">
         <div className="AddItem__form-item">
           <p className="AddItem__form-item-title">Service name</p>
@@ -44,7 +56,7 @@ export const AddItem = () => {
             placeholder="Title"
             required
             value={title}
-            onChange={e => setTitile(e.target.value)}
+            onChange={e => setTitle(e.target.value)}
             maxLength={20}
           />
         </div>

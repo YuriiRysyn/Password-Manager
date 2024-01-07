@@ -1,13 +1,24 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { deleteItem, updateItem } from '../../../../redux/dashboardActions';
 import { EditOutlined } from '@ant-design/icons';
+// import { useDispatch, useSelector } from 'react-redux';
 
 import './Item.scss';
 
-export const Item = ({ item }) => {
-  const user = useSelector(state => state.user);
-  const dispatch = useDispatch();
+import { deleteItem, updateItem } from '../../../../redux/dashboardActions';
+import { useAppDispatch, useAppSelector } from '../../../..';
+
+import { IExtendedItem } from '../../../../types/dashboardItemsTypes';
+
+interface ItemProps {
+  item: IExtendedItem;
+}
+
+export const Item = ({ item }: ItemProps) => {
+  // const user = useSelector(state => state.user);
+  // const dispatch = useDispatch();
+
+  const user = useAppSelector(state => state.user);
+  const dispatch = useAppDispatch();
 
   const [title, setTitle] = useState(item.title);
   const [password, setPassword] = useState(item.password);
@@ -36,7 +47,7 @@ export const Item = ({ item }) => {
     setEditItem(false);
   };
 
-  const handleEditing = event => {
+  const handleEditing = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (!editItem) {
       return;
     }

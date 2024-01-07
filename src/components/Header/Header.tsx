@@ -1,26 +1,27 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+// import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { logOut } from '../../redux/actions';
-import { REQUEST } from '../../redux/constants';
 
 import './Header.scss';
+import { useAppDispatch, useAppSelector } from '../..';
+import { RequestStatusEnum } from '../../redux/constants';
 
 export const Header = () => {
-  const user = useSelector(state => state.user);
-  const dispatch = useDispatch();
+  // const user = useSelector(state => state.user);
+  // const dispatch = useDispatch();
+
+  const user = useAppSelector(state => state.user);
+  const dispatch = useAppDispatch();
 
   let disableButtons = false;
 
   if (user) {
+    const { signInRequestStatus, signUpRequestStatus } = user;
+
     if (
-      user.signInRequestStatus &&
-      user.signInRequestStatus === REQUEST.PENDING
-    ) {
-      disableButtons = true;
-    } else if (
-      user.signUpRequestStatus &&
-      user.signUpRequestStatus === REQUEST.PENDING
+      signInRequestStatus === RequestStatusEnum.PENDING ||
+      signUpRequestStatus === RequestStatusEnum.PENDING
     ) {
       disableButtons = true;
     }

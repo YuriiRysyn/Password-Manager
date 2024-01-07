@@ -1,24 +1,39 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+// import { useDispatch, useSelector } from 'react-redux';
 
 import { AddItem } from './AddItem/AddItem';
 import { Items } from './Items/Items';
 
 import './Dashboard.scss';
 import { getItems } from '../../redux/dashboardActions';
-import { REQUEST } from '../../redux/constants';
 import { Loader } from '../Loader/Loader';
+import { useAppDispatch, useAppSelector } from '../..';
+import { RequestStatusEnum } from '../../redux/constants';
+import { IDashboardItems } from '../../types/dashboardItemsTypes';
 
 export const Dashboard = () => {
-  const user = useSelector(state => state.user);
-  const requestStatus = useSelector(state => state.dasboardItems.requestStatus);
-  const isPending = requestStatus === REQUEST.PENDING;
+  // const user = useSelector(state => state.user);
+  // const dispatch = useDispatch();
 
-  const dispatch = useDispatch();
+  const user = useAppSelector(state => state.user);
+  const dispatch = useAppDispatch();
+
+  // const requestStatus = useSelector(state => state.dashboardItems.requestStatus);
+  const requestStatus: IDashboardItems['requestStatus'] = useAppSelector(
+    state => state.dashboardItems.requestStatus
+  );
+
+  // const dashboardItems: IDashboardItems = useAppSelector(
+  //   state => state.dashboardItems
+  // );
+
+  const isPending = requestStatus === RequestStatusEnum.PENDING;
+
   const [isShowAddItem, setIsShowAddItem] = useState(false);
 
   useEffect(() => {
-    !isPending && dispatch(getItems(user.id));
+    requestStatus === RequestStatusEnum.NOT_STARTED &&
+      dispatch(getItems(user.id));
   }, []);
 
   return (

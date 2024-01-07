@@ -1,28 +1,35 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
-import { REQUEST } from '../../redux/constants';
-import { signUp } from '../../redux/actions';
+// import { useDispatch, useSelector } from 'react-redux';
 
 import { Form, Input, Button, Checkbox } from 'antd';
 import 'antd/dist/antd.css';
 
+import { useAppDispatch, useAppSelector } from '../..';
+import { signUp } from '../../redux/actions';
+
 import { Loader } from '../Loader/Loader';
+import { ISignUpUserData } from '../../types/userDataTypes';
+import { RequestStatusEnum } from '../../redux/constants';
 
 export const SignUp = () => {
   const [form] = Form.useForm();
-  const user = useSelector(state => state.user);
-  const dispatch = useDispatch();
-  const requestStatus = user && user.signUpRequestStatus;
+  // const user = useSelector(state => state.user);
+  // const dispatch = useDispatch();
 
-  const isPending = requestStatus === REQUEST.PENDING;
+  const user = useAppSelector(state => state.user);
+  const dispatch = useAppDispatch();
+
+  const requestStatus = user.signUpRequestStatus;
+
+  const isPending = requestStatus === RequestStatusEnum.PENDING;
 
   const [isFailedSignIn, setIsFailedSignIn] = useState(false);
   const [errorInfo, setErrorInfo] = useState(
     'Failed to sign up. Please, try again later.'
   );
 
-  const onSignUp = userFormData => {
+  const onSignUp = (userFormData: ISignUpUserData) => {
     if (!validatePass(userFormData)) {
       return;
     }
@@ -34,7 +41,7 @@ export const SignUp = () => {
     form.resetFields();
   };
 
-  const validatePass = userFormData => {
+  const validatePass = (userFormData: ISignUpUserData) => {
     const { password, confirmedPassword } = userFormData;
 
     if (password !== confirmedPassword) {
@@ -131,7 +138,7 @@ export const SignUp = () => {
         </Form.Item>
       </Form>
 
-      {(isFailedSignIn || requestStatus === REQUEST.ERROR) && (
+      {(isFailedSignIn || requestStatus === RequestStatusEnum.ERROR) && (
         <p className="authorization-error-message">{errorInfo}</p>
       )}
     </section>
