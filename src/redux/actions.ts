@@ -87,25 +87,26 @@ const signInSuccess = (userData: Partial<IExtendedUser>) => ({
   ...userData,
 });
 
-export const signIn = (userData: ISignInUserData) => async dispatch => {
-  dispatch(signInPending());
+export const signIn =
+  (userData: ISignInUserData) => async (dispatch: Dispatch) => {
+    dispatch(signInPending());
 
-  const user = await signInOnServer(userData);
+    const user = await signInOnServer(userData);
 
-  if (user && user.status === 'success') {
-    if (userData.remember) {
-      localStorage.setItem('user', JSON.stringify(user));
+    if (user && user.status === 'success') {
+      if (userData.remember) {
+        localStorage.setItem('user', JSON.stringify(user));
+      }
+
+      dispatch(signInSuccess(user));
+    } else if (user && user.status) {
+      const error = user.status;
+
+      dispatch(signInError(error));
+    } else {
+      dispatch(signInError());
     }
-
-    dispatch(signInSuccess(user));
-  } else if (user && user.status) {
-    const error = user.status;
-
-    dispatch(signInError(error));
-  } else {
-    dispatch(signInError());
-  }
-};
+  };
 
 export const getUserFromLS =
   () =>
@@ -119,7 +120,7 @@ export const getUserFromLS =
     }
   };
 
-export const logOut = () => dispatch => {
+export const logOut = () => (dispatch: Dispatch) => {
   localStorage.clear();
 
   dispatch({ type: UserLoginActionsEnum.LOGOUT });
