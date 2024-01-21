@@ -1,21 +1,20 @@
 import React, { useState } from 'react';
-// import { useDispatch, useSelector } from 'react-redux';
-import { RequestStatusEnum } from '../../../redux/constants';
-import { addItem } from '../../../redux/dashboardActions';
-import { Loader } from '../../Loader/Loader';
 
 import './AddItem.scss';
-import { useAppDispatch, useAppSelector } from '../../..';
+import { Loader } from '../../Loader/Loader';
+
+// Logic dependencies
+import { useAppDispatch, useAppSelector } from '../../../Store/store';
+import { addItem } from '../../../Store/dashboard/dashboard.actions';
+
+// Types
+import { RequestStatusEnum } from '../../../types/enums';
 import { IDashboardItems } from '../../../types/dashboardItemsTypes';
 
 export const AddItem = () => {
-  // const user = useSelector(state => state.user);
-  // const dispatch = useDispatch();
-
   const user = useAppSelector(state => state.user);
   const dispatch = useAppDispatch();
 
-  // const requestStatus = useSelector(state => state.dashboardItems.requestStatus);
   const requestStatus: IDashboardItems['requestStatus'] = useAppSelector(
     state => state.dashboardItems.requestStatus
   );
@@ -33,7 +32,9 @@ export const AddItem = () => {
       password,
     };
 
-    dispatch(addItem(user.id, newItemData));
+    if (user.userData.id) {
+      dispatch(addItem({ userId: user.userData.id, newItemData }));
+    }
 
     setTitle('');
     setPassword('');

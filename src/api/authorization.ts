@@ -1,4 +1,12 @@
-export const signUpOnServer = async userData => {
+import {
+  ISignInUserData,
+  ISignUpUserData,
+  IUserDataFromServer,
+} from '../types/userDataTypes';
+
+export const signUpOnServer = async (
+  userData: ISignUpUserData
+): Promise<IUserDataFromServer | null> => {
   const url = process.env.REACT_APP_API_URL + '/sign-up';
 
   try {
@@ -20,7 +28,9 @@ export const signUpOnServer = async userData => {
   }
 };
 
-export const signInOnServer = async userData => {
+export const signInOnServer = async (
+  userData: ISignInUserData
+): Promise<IUserDataFromServer | null> => {
   const url = process.env.REACT_APP_API_URL + '/sign-in';
 
   try {
@@ -41,4 +51,3 @@ export const signInOnServer = async userData => {
     return null;
   }
 };
-

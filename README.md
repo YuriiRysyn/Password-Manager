@@ -4,7 +4,7 @@
 # Project was created with:
 Front-end:
 - React/React Hooks/React Router
-- Redux/Redux Thunk/Redux Hooks
+- Redux/Redux Toolkit/Redux Hooks
 - TypeScript
 - LocalStorage
 - WebPack

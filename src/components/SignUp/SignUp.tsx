@@ -1,26 +1,24 @@
 import React, { useState } from 'react';
-
-// import { useDispatch, useSelector } from 'react-redux';
-
 import { Form, Input, Button, Checkbox } from 'antd';
+
 import 'antd/dist/antd.css';
-
-import { useAppDispatch, useAppSelector } from '../..';
-import { signUp } from '../../redux/actions';
-
 import { Loader } from '../Loader/Loader';
+
+// Logic dependencies
+import { useAppDispatch, useAppSelector } from '../../Store/store';
+import { signUp } from '../../Store/user/user.actions';
+// Types
+
 import { ISignUpUserData } from '../../types/userDataTypes';
-import { RequestStatusEnum } from '../../redux/constants';
+import { RequestStatusEnum } from '../../types/enums';
 
 export const SignUp = () => {
   const [form] = Form.useForm();
-  // const user = useSelector(state => state.user);
-  // const dispatch = useDispatch();
 
   const user = useAppSelector(state => state.user);
   const dispatch = useAppDispatch();
 
-  const requestStatus = user.signUpRequestStatus;
+  const requestStatus = user.signXStatus;
 
   const isPending = requestStatus === RequestStatusEnum.PENDING;
 
@@ -46,6 +44,7 @@ export const SignUp = () => {
 
     if (password !== confirmedPassword) {
       setErrorInfo('Incorrect confirming password');
+      
       setIsFailedSignIn(true);
 
       return false;

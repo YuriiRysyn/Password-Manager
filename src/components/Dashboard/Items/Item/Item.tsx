@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { EditOutlined } from '@ant-design/icons';
-// import { useDispatch, useSelector } from 'react-redux';
 
 import './Item.scss';
 
-import { deleteItem, updateItem } from '../../../../redux/dashboardActions';
-import { useAppDispatch, useAppSelector } from '../../../..';
+import { useAppDispatch, useAppSelector } from '../../../../Store/store';
+import {
+  deleteItem,
+  updateItem,
+} from '../../../../Store/dashboard/dashboard.actions';
 
 import { IExtendedItem } from '../../../../types/dashboardItemsTypes';
 
@@ -14,9 +16,6 @@ interface ItemProps {
 }
 
 export const Item = ({ item }: ItemProps) => {
-  // const user = useSelector(state => state.user);
-  // const dispatch = useDispatch();
-
   const user = useAppSelector(state => state.user);
   const dispatch = useAppDispatch();
 
@@ -26,7 +25,7 @@ export const Item = ({ item }: ItemProps) => {
   const [editItem, setEditItem] = useState(false);
 
   const onDeleteItem = () => {
-    dispatch(deleteItem(user.id, item.id));
+    dispatch(deleteItem({ userId: user.userData.id, itemId: item.id }));
   };
 
   const update = () => {
@@ -40,7 +39,13 @@ export const Item = ({ item }: ItemProps) => {
         password: password.trim(),
       };
 
-      dispatch(updateItem(user.id, item.id, updatedFields));
+      dispatch(
+        updateItem({
+          userId: user.userData.id,
+          itemId: item.id,
+          itemData: updatedFields,
+        })
+      );
     } else {
       onDeleteItem();
     }

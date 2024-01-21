@@ -1,5 +1,5 @@
-import { DeleteItemStatusesEnum } from '../redux/constants';
 import { IExtendedItem, IItem } from '../types/dashboardItemsTypes';
+import { DeleteItemStatusesEnum } from '../types/enums';
 import { IUser } from '../types/userDataTypes';
 
 export const getItemsFromServer = async (
@@ -50,7 +50,7 @@ export const addItemOnServer = async (
 export const updateItemOnServer = async (
   userId: IUser['id'],
   itemId: IExtendedItem['id'],
-  itemData: IExtendedItem
+  newItemData: IItem
 ): Promise<IExtendedItem | null> => {
   const url = process.env.REACT_APP_API_URL + `/dasboard/${userId}&&${itemId}`;
 
@@ -60,7 +60,7 @@ export const updateItemOnServer = async (
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
       },
-      body: JSON.stringify(itemData),
+      body: JSON.stringify(newItemData),
     });
 
     const updatedItem = await responce.json();
@@ -76,7 +76,7 @@ export const updateItemOnServer = async (
 export const deleteItemOnserver = async (
   userId: IUser['id'],
   itemId: IExtendedItem['id']
-): Promise<{ status: DeleteItemStatusesEnum } | null> => {
+): Promise<{ status: DeleteItemStatusesEnum }> => {
   const url = process.env.REACT_APP_API_URL + `/dasboard/${userId}&&${itemId}`;
 
   try {
@@ -93,6 +93,6 @@ export const deleteItemOnserver = async (
   } catch (e) {
     console.log(e);
 
-    return null;
+    return { status: DeleteItemStatusesEnum.error };
   }
 };

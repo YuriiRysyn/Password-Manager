@@ -1,11 +1,11 @@
-import { RequestStatusEnum } from '../redux/constants';
+import { RequestStatusEnum } from "./enums";
 
 export interface IItem {
   title: string;
   password: string;
 }
 
-// Items created on a Server  
+// Items created on a Server
 export interface IExtendedItem extends IItem {
   userId: string;
   id: string;
@@ -13,6 +13,6 @@ export interface IExtendedItem extends IItem {
 
 export interface IDashboardItems {
   requestStatus: RequestStatusEnum;
-  items: IExtendedItem[] | [];
+  items: IExtendedItem[];
+  error?: string | null;
 }
-

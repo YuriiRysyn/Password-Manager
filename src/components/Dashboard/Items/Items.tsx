@@ -1,14 +1,11 @@
 import React from 'react';
-// import { useSelector } from 'react-redux';
+
+import { useAppSelector } from '../../../Store/store';
+
 import { Item } from './Item/Item';
-import { useAppSelector } from '../../..';
-import { IDashboardItems } from '../../../types/dashboardItemsTypes';
 
 export const Items = () => {
-  // const items = useSelector(state => state.dashboardItems.items);
-  const items: IDashboardItems['items'] = useAppSelector(
-    state => state.dashboardItems.items
-  );
+  const items = useAppSelector(state => state.dashboardItems.items);
 
   return (
     <section className="Items">

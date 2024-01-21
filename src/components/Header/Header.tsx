@@ -1,34 +1,26 @@
 import React from 'react';
-// import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import { logOut } from '../../redux/actions';
 
 import './Header.scss';
-import { useAppDispatch, useAppSelector } from '../..';
-import { RequestStatusEnum } from '../../redux/constants';
+
+import { useAppDispatch, useAppSelector } from '../../Store/store';
+import { logout } from '../../Store/user/user.slice';
+import { RequestStatusEnum } from '../../types/enums';
 
 export const Header = () => {
-  // const user = useSelector(state => state.user);
-  // const dispatch = useDispatch();
-
   const user = useAppSelector(state => state.user);
+  const { signXStatus } = user;
+
   const dispatch = useAppDispatch();
 
   let disableButtons = false;
 
-  if (user) {
-    const { signInRequestStatus, signUpRequestStatus } = user;
-
-    if (
-      signInRequestStatus === RequestStatusEnum.PENDING ||
-      signUpRequestStatus === RequestStatusEnum.PENDING
-    ) {
-      disableButtons = true;
-    }
+  if (signXStatus === RequestStatusEnum.PENDING) {
+    disableButtons = true;
   }
 
   const onLogOut = () => {
-    dispatch(logOut());
+    dispatch(logout());
   };
 
   return (
@@ -36,7 +28,7 @@ export const Header = () => {
       <h1 className="Header__title">Password manager</h1>
       {user.isAuth ? (
         <>
-          <p className="Header__user-name">{user.userName}</p>
+          <p className="Header__user-name">{user.userData.userName}</p>
           <button className="Header__btn" onClick={onLogOut}>
             Log Out
           </button>

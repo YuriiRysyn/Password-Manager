@@ -1,30 +1,25 @@
 import React from 'react';
-// import { useDispatch, useSelector } from 'react-redux';
-
 import { Form, Input, Button, Checkbox } from 'antd';
+
 import 'antd/dist/antd.css';
-
-import { signIn } from '../../redux/actions';
-import { useAppDispatch, useAppSelector } from '../..';
-
-// Types
-import { RequestStatusEnum } from '../../redux/constants';
-import { ISignInUserData } from '../../types/userDataTypes';
-
 import './SignIn.scss';
-
 import { Loader } from '../Loader/Loader';
 
-export const SignIn = () => {
-  // const user = useSelector(state => state.user);
-  // const dispatch = useDispatch();
+// Logic dependencies
+import { useAppDispatch, useAppSelector } from '../../Store/store';
+import { signIn } from '../../Store/user/user.actions';
 
+// Types
+import { ISignInUserData } from '../../types/userDataTypes';
+import { RequestStatusEnum } from '../../types/enums';
+
+export const SignIn = () => {
   const user = useAppSelector(state => state.user);
   const dispatch = useAppDispatch();
 
   const [form] = Form.useForm();
 
-  const requestStatus = user.signInRequestStatus;
+  const requestStatus = user.signXStatus;
   const isPending = requestStatus === RequestStatusEnum.PENDING;
 
   const errorInfo = 'Failed to sign in. Please, try again later.';

@@ -1,39 +1,35 @@
 import React, { useEffect, useState } from 'react';
-// import { useDispatch, useSelector } from 'react-redux';
 
+import './Dashboard.scss';
+
+// Logic dependencies
+import { useAppDispatch, useAppSelector } from '../../Store/store';
+import { getItems } from '../../Store/dashboard/dashboard.actions';
+// Types
+import { IDashboardItems } from '../../types/dashboardItemsTypes';
+import { RequestStatusEnum } from '../../types/enums';
+// React Components
+import { Loader } from '../Loader/Loader';
 import { AddItem } from './AddItem/AddItem';
 import { Items } from './Items/Items';
 
-import './Dashboard.scss';
-import { getItems } from '../../redux/dashboardActions';
-import { Loader } from '../Loader/Loader';
-import { useAppDispatch, useAppSelector } from '../..';
-import { RequestStatusEnum } from '../../redux/constants';
-import { IDashboardItems } from '../../types/dashboardItemsTypes';
-
 export const Dashboard = () => {
-  // const user = useSelector(state => state.user);
-  // const dispatch = useDispatch();
-
   const user = useAppSelector(state => state.user);
   const dispatch = useAppDispatch();
-
-  // const requestStatus = useSelector(state => state.dashboardItems.requestStatus);
-  const requestStatus: IDashboardItems['requestStatus'] = useAppSelector(
-    state => state.dashboardItems.requestStatus
+  const dashboardItems: IDashboardItems = useAppSelector(
+    state => state.dashboardItems
   );
 
-  // const dashboardItems: IDashboardItems = useAppSelector(
-  //   state => state.dashboardItems
-  // );
+  const { requestStatus } = dashboardItems;
 
   const isPending = requestStatus === RequestStatusEnum.PENDING;
 
   const [isShowAddItem, setIsShowAddItem] = useState(false);
 
   useEffect(() => {
-    requestStatus === RequestStatusEnum.NOT_STARTED &&
-      dispatch(getItems(user.id));
+    if (requestStatus === RequestStatusEnum.NOT_STARTED) {
+      dispatch(getItems(user.userData.id));
+    }
   }, []);
 
   return (

@@ -34,6 +34,11 @@ app.post('/api/sign-in', bodyParser.json(), async (req, res) => {
 
   const signedUserData = handleSignIn(user);
 
+  if (signedUserData.status !== 'success') {
+    
+    res.status(400);
+  }
+
   res.send(signedUserData);
 });
 
@@ -62,7 +67,6 @@ app.patch(
     } else {
       res.send(null);
     }
-
   }
 );
 
